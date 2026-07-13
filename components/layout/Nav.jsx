@@ -2,22 +2,20 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
-import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
 import { FiDownload, FiMenu, FiX } from "react-icons/fi";
 
-// ScrollTrigger ko register karna zaroori hai
 gsap.registerPlugin(ScrollTrigger);
 
-const NavItem = ({ href, children, onClick }) => (
-  <Link
+const NavItem = ({ href, children, onClick, isActive }) => (
+  <a
     href={href}
     onClick={onClick}
-    className="text-3xl md:text-xl tracking-[-0.1rem] uppercase font-semibold transition-all duration-300 relative group text-[#111111]"
+    className={`text-3xl md:text-xl tracking-[-0.1rem] uppercase font-semibold transition-all duration-300 relative group text-[#111111]`}
   >
     {children}
-    <span className="block w-0 h-px bg-[#111111] rounded absolute bottom-0 left-0 group-hover:w-full transition-all duration-500"></span>
-  </Link>
+    <span className={`block h-px bg-secondary rounded absolute bottom-0 left-0 transition-all duration-500 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+  </a>
 );
 
 const ResumeButton = ({ fileUrl }) => (
@@ -43,16 +41,34 @@ const Nav = ({ isPreloaded }) => {
   const navTl = useRef();
   const menuTl = useRef();
   const [isOpen, setIsOpen] = useState(false);
+  const [activeId, setActiveId] = useState('');
   
-  // Mobile menu open hai ya nahi, ise GSAP ke andar track karne ke liye ref banaya hai
   const isOpenRef = useRef(isOpen);
 
   useEffect(() => {
     isOpenRef.current = isOpen;
   }, [isOpen]);
 
+  useEffect(() => {
+    const ids = ['work', 'about', 'contact', 'skills', 'home'];
+    const observerOptions = { root: null, rootMargin: '0px 0px -60% 0px', threshold: 0.1 };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveId(entry.target.id);
+        }
+      });
+    }, observerOptions);
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id) || document.querySelector(`[data-section="${id}"]`);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   useGSAP(() => {
-    // 1. Initial Nav Load Animation
     navTl.current = gsap.timeline({ paused: true });
     
     navTl.current.from(".nav-bar", {
@@ -62,7 +78,6 @@ const Nav = ({ isPreloaded }) => {
       ease: 'power4.inOut',
     });
 
-    // 2. Mobile Menu Reveal Animation (Clip-Path Shutter)
     menuTl.current = gsap.timeline({ paused: true });
     
     menuTl.current.to(".mobile-overlay", {
@@ -78,18 +93,14 @@ const Nav = ({ isPreloaded }) => {
       ease: "power3.out"
     }, "-=0.4");
 
-    // 3. Smart Navbar (Hide on Scroll Down, Show on Scroll Up)
     ScrollTrigger.create({
-      start: "top -80", // Jab 80px scroll ho jaye tab ye logic start hoga
+      start: "top -80",
       onUpdate: (self) => {
-        // Agar mobile menu khula hai, toh Nav ko hide mat karo
         if (isOpenRef.current) return;
 
         if (self.direction === 1) {
-          // self.direction 1 matlab user NEECHE scroll kar raha hai -> Hide
           gsap.to(headerRef.current, { yPercent: -100, duration: 0.4, ease: "power3.out", overwrite: "auto" });
         } else {
-          // self.direction -1 matlab user UPAR scroll kar raha hai -> Show
           gsap.to(headerRef.current, { yPercent: 0, duration: 0.4, ease: "power3.out", overwrite: "auto" });
         }
       }
@@ -97,14 +108,12 @@ const Nav = ({ isPreloaded }) => {
 
   }, { scope: headerRef });
 
-  // Play Initial Animation
   useEffect(() => {
     if (isPreloaded && navTl.current) {
         navTl.current.play();
     }
   }, [isPreloaded]);
 
-  // Toggle Mobile Menu Animation
   useEffect(() => {
     if (isOpen) {
         document.body.style.overflow = 'hidden';
@@ -118,29 +127,24 @@ const Nav = ({ isPreloaded }) => {
   return (
     <header ref={headerRef} className="fixed top-0 left-0 w-full z-50">
       
-      {/* Top Navbar */}
       <nav className="nav-bar relative w-full flex justify-between items-center py-6 px-6 md:px-12 bg-[#f5f5f5]/80 backdrop-blur-md z-50">
         
-        {/* Logo */}
         <div className="z-50">
-            <NavItem href="/" onClick={() => setIsOpen(false)}>Gaurav</NavItem>
+          <NavItem href="#home" onClick={(e) => { e.preventDefault(); const el = document.getElementById('home') || document.body; el && el.scrollIntoView({ behavior: 'smooth' }); setIsOpen(false); }} isActive={activeId === 'home'}>Gaurav</NavItem>
         </div>
         
-        {/* Desktop Links */}
-        <div className="hidden md:flex gap-4 items-center">
-          <NavItem href="/">Work</NavItem>
+        <div className="hidden md:flex gap-2 items-center">
+          <NavItem href="#work" onClick={(e) => { e.preventDefault(); const el = document.getElementById('work') || document.querySelector('[data-section="work"]'); el && el.scrollIntoView({ behavior: 'smooth' }); setIsOpen(false); }} isActive={activeId === 'work'}>Work</NavItem>
           <span className="text-gray-400">/</span>
-          <NavItem href="/">About</NavItem>
+          <NavItem href="#about" onClick={(e) => { e.preventDefault(); const el = document.getElementById('about') || document.querySelector('[data-section="about"]'); el && el.scrollIntoView({ behavior: 'smooth' }); setIsOpen(false); }} isActive={activeId === 'about'}>About</NavItem>
           <span className="text-gray-400">/</span>
-          <NavItem href="/">Contact</NavItem>
+          <NavItem href="#contact" onClick={(e) => { e.preventDefault(); const el = document.getElementById('contact') || document.querySelector('[data-section="contact"]'); el && el.scrollIntoView({ behavior: 'smooth' }); setIsOpen(false); }} isActive={activeId === 'contact'}>Contact</NavItem>
         </div>
         
-        {/* Desktop Resume Button */}
         <div className="hidden md:block">
             <ResumeButton fileUrl="/resume.pdf" />
         </div>
 
-        {/* Mobile Hamburger Button */}
         <button 
             className="md:hidden z-50 text-3xl text-[#111111] transition-transform duration-300 hover:scale-110"
             onClick={() => setIsOpen(!isOpen)}
@@ -150,19 +154,18 @@ const Nav = ({ isPreloaded }) => {
 
       </nav>
 
-      {/* Mobile Menu Overlay */}
       <div 
         className="mobile-overlay absolute top-0 left-0 w-full h-screen bg-[#f5f5f5] flex flex-col justify-center items-center gap-10 md:hidden z-40" 
         style={{ clipPath: "inset(0% 0% 100% 0%)" }}
       >
         <div className="mobile-item">
-            <NavItem href="/" onClick={() => setIsOpen(false)}>Work</NavItem>
+            <NavItem href="#work" onClick={(e) => { e.preventDefault(); const el = document.getElementById('work') || document.querySelector('[data-section="work"]'); el && el.scrollIntoView({ behavior: 'smooth' }); setIsOpen(false); }} isActive={activeId === 'work'}>Work</NavItem>
         </div>
         <div className="mobile-item">
-            <NavItem href="/" onClick={() => setIsOpen(false)}>About</NavItem>
+            <NavItem href="#about" onClick={(e) => { e.preventDefault(); const el = document.getElementById('about') || document.querySelector('[data-section="about"]'); el && el.scrollIntoView({ behavior: 'smooth' }); setIsOpen(false); }} isActive={activeId === 'about'}>About</NavItem>
         </div>
         <div className="mobile-item">
-            <NavItem href="/" onClick={() => setIsOpen(false)}>Contact</NavItem>
+            <NavItem href="#contact" onClick={(e) => { e.preventDefault(); const el = document.getElementById('contact') || document.querySelector('[data-section="contact"]'); el && el.scrollIntoView({ behavior: 'smooth' }); setIsOpen(false); }} isActive={activeId === 'contact'}>Contact</NavItem>
         </div>
         <div className="mobile-item mt-8">
             <ResumeButton fileUrl="/resume.pdf" />

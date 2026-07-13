@@ -6,16 +6,15 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 
-// Register ScrollTrigger
 gsap.registerPlugin(ScrollTrigger)
 
 const Contact = () => {
   const containerRef = useRef(null)
   const socials = [
     { name: 'Instagram', href: 'https://instagram.com/' },
-    { name: 'Twitter', href: 'https://twitter.com/' },
-    { name: 'LinkedIn', href: 'https://linkedin.com/' },
-    { name: 'GitHub', href: 'https://github.com/' },
+    { name: 'X(Twitter)', href: 'https://x.com/gauravxgrewal' },
+    { name: 'LinkedIn', href: 'https://linkedin.com/in/gauravxgrewal' },
+    { name: 'GitHub', href: 'https://github.com/gauravgrewal01' },
   ]
 
   useGSAP(() => {
@@ -60,16 +59,10 @@ const Contact = () => {
   }, { scope: containerRef })
 
   return (
-    <section 
-      ref={containerRef}
-      // Reverted to Dark Theme: bg-[#0a0a0a] and text-[#f1f1f1]
-      className="min-h-[100svh] bg-[#0a0a0a] text-[#f1f1f1] px-6 md:px-12 pt-32 pb-8 flex flex-col justify-between overflow-hidden relative z-10"
-    >
-      
-      {/* Top Section */}
+    <section id="contact" ref={containerRef} className="min-h-screen bg-secondary text-primary px-6 md:px-12 pt-32 pb-8 flex flex-col justify-between overflow-hidden relative z-10">
+
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12 md:gap-0">
-        
-        {/* Email Block */}
+
         <div className="flex flex-col gap-2 w-full">
           <span className="top-reveal text-xs md:text-sm text-accent font-semibold uppercase tracking-widest">
             [ Got something in mind? ]
@@ -77,7 +70,6 @@ const Contact = () => {
 
           <Link
             href="mailto:gauravxgrewal@gmail.com"
-            // Mobile ke liye fluid typography (text-[6vw]) maintain ki hai
             className="top-reveal text-[6vw] sm:text-2xl md:text-4xl font-space font-bold tracking-tighter transition-colors group flex items-center gap-1 hover:text-accent w-fit"
           >
             gauravxgrewal@gmail.com
@@ -87,8 +79,6 @@ const Contact = () => {
              />
           </Link>
         </div>
-
-        {/* Socials Block */}
         <div className="grid grid-cols-2 md:flex md:gap-10 gap-x-8 gap-y-6 w-full md:w-auto">
           {socials.map((social) => (
             <Link
@@ -108,8 +98,6 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* Massive "LET'S TALK" Header */}
-      {/* Dark theme border applied (border-white/10) */}
       <div className="w-full text-center border-b border-white/10 pb-8 mt-20 md:mt-auto mb-8">
         <h1 className="text-[22vw] md:text-[14vw] font-space font-black tracking-tighter leading-[0.8] uppercase flex flex-col md:flex-row justify-center items-center md:gap-[3vw]">
           <span className="overflow-hidden inline-block pb-2 pr-4">
@@ -121,11 +109,10 @@ const Contact = () => {
         </h1>
       </div>
 
-      {/* Bottom Footer Details */}
-      <div className="flex flex-col md:flex-row justify-between items-center text-[10px] md:text-xs text-gray-500 font-semibold uppercase tracking-widest gap-6 md:gap-0">
+      <div className="flex justify-between items-center text-[8px] md:text-xs text-gray-500 font-semibold uppercase tracking-widest">
         <span className="footer-reveal text-center">© 2026 Gaurav Portfolio</span>
         
-        <span className="footer-reveal flex items-center gap-2">
+        <span className="footer-reveal items-center gap-2 hidden md:flex">
            <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
            Local Time: Haryana, India
         </span>

@@ -12,10 +12,9 @@ const Work = () => {
 
     useGSAP(() => {
         gsap.registerPlugin(ScrollTrigger)
-        
-        // Har project row ko alag se animate karenge
+
         const projects = gsap.utils.toArray('.project-row');
-        
+
         projects.forEach((proj) => {
             const imgWrapper = proj.querySelector('.img-reveal');
             const img = proj.querySelector('.parallax-img');
@@ -25,37 +24,34 @@ const Work = () => {
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: proj,
-                    start: 'top 75%', // Jab row screen ke 75% hisse me aaye
-                    toggleActions: 'play none none reverse', // Upar jane pe reverse hogi
+                    start: 'top 75%',
+                    toggleActions: 'play none none reverse',
                 }
             });
 
-            // 1. Image container reveal (shutter effect)
-            tl.fromTo(imgWrapper, 
-                { clipPath: 'inset(0% 0% 100% 0%)' }, 
+            tl.fromTo(imgWrapper,
+                { clipPath: 'inset(0% 0% 100% 0%)' },
                 { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power4.inOut' }
             )
-            // 2. Text elements fade and slide up
-            .from(texts, {
-                y: 30,
-                opacity: 0,
-                stagger: 0.1,
-                duration: 0.8,
-                ease: 'power3.out'
-            }, "-=0.6")
-            // 3. Border line animate
-            .from(border, {
-                scaleX: 0,
-                transformOrigin: 'left',
-                duration: 0.8,
-                ease: 'power3.out'
-            }, "-=0.8");
+                .from(texts, {
+                    y: 30,
+                    opacity: 0,
+                    stagger: 0.1,
+                    duration: 0.8,
+                    ease: 'power3.out'
+                }, "-=0.6")
 
-            // 4. Parallax effect for the image inside the container
-            gsap.fromTo(img, 
-                { y: '-10%' }, 
-                { 
-                    y: '10%', 
+                .from(border, {
+                    scaleX: 0,
+                    transformOrigin: 'left',
+                    duration: 0.8,
+                    ease: 'power3.out'
+                }, "-=0.8");
+
+            gsap.fromTo(img,
+                { y: '-10%' },
+                {
+                    y: '10%',
                     ease: 'none',
                     scrollTrigger: {
                         trigger: proj,
@@ -68,73 +64,64 @@ const Work = () => {
         })
     }, { scope: containerRef })
 
-    // Expanded data structure with more Awwwards-style details
     const projects = [
-        { 
-            id: '01', 
-            title: 'Alpha Core', 
-            role: 'Art Direction & Dev', 
-            year: '2023',
-            desc: 'A complete digital transformation focusing on brutalist typography and seamless WebGL interactions to redefine the brand identity.',
-            img: '/works/1.png' 
+        {
+            id: '01',
+            title: 'Coming Soon',
+            role: 'New Project',
+            year: '2026',
+            desc: 'An exciting project is currently in development. Stay tuned for the official launch.',
+            img: 'https://images.unsplash.com/photo-1496262967815-132206202600'
         },
-        { 
-            id: '02', 
-            title: 'Nova Studio', 
-            role: 'UI/UX Design', 
-            year: '2024',
-            desc: 'An immersive portfolio experience built for a creative agency, blending minimalist aesthetics with high-performance animations.',
-            img: '/works/2.png' 
+        {
+            id: '02',
+            title: 'Coming Soon',
+            role: 'New Project',
+            year: '2026',
+            desc: 'Something innovative is on the way. More details will be revealed soon.',
+            img: 'https://images.unsplash.com/photo-1496262967815-132206202600'
         },
-        { 
-            id: '03', 
-            title: 'Nexus Pay', 
-            role: 'Full Stack Product', 
-            year: '2024',
-            desc: 'A fintech dashboard rethinking how users interact with their financial data through dark-mode optimized components and real-time graphs.',
-            img: '/works/3.png' 
+        {
+            id: '03',
+            title: 'Coming Soon',
+            role: 'New Project',
+            year: '2026',
+            desc: 'A new experience is being crafted with care. Check back soon for updates.',
+            img: 'https://images.unsplash.com/photo-1496262967815-132206202600'
         },
-    ]
+    ];
 
     return (
-        <div ref={containerRef} className='w-full pb-32 bg-[#0a0a0a]'> {/* Assuming a very dark background */}
-            
-            {/* Header Section */}
+        <div id="work" ref={containerRef} className='w-full pb-32 bg-[#0a0a0a]'>
+
             <div className='px-12 pt-32 pb-16 grid md:grid-cols-9 grid-cols-1'>
                 <div className='col-span-1 md:col-span-5 flex flex-col justify-end'>
-                    <span className='text-xl text-accent pl-4 font-semibold mb-4'>[selected works]</span>
+                    <span className='text-xl text-accent font-semibold mb-4'>[selected works]</span>
                     <h2 className='text-[7vw] md:text-[6vw] font-space leading-[0.85] font-black uppercase tracking-tighter text-gray-200'>
-                        Featured <br /> Projects
+                        Projects
                     </h2>
                 </div>
             </div>
 
-            {/* Projects List */}
             <div className='px-12 flex flex-col gap-32 md:gap-40 mt-12'>
                 {projects.map((project) => (
                     <div key={project.id} className='project-row grid md:grid-cols-9 grid-cols-1 gap-8 md:gap-16 items-center group cursor-pointer'>
-                        
-                        {/* Left Side: Large Mockup Image (Takes 6 columns) */}
-                        <div className='col-span-1 md:col-span-6 relative h-[60vh] md:h-[80vh] w-full overflow-hidden bg-[#1e1e1e] img-reveal'>
-                            <Image 
-                                src={project.img} 
-                                // Scale up slightly so parallax has room to move
-                                className='parallax-img object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out' 
-                                fill 
+
+                        <div className='col-span-1 md:col-span-6 relative h-[60vh] md:h-[80vh] w-full overflow-hidden bg-[#0a0a0a] img-reveal'>
+                            <Image
+                                src={project.img}
+                                className='parallax-img object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out'
+                                fill
                                 alt={project.title}
                             />
-                            {/* Hover Overlay Text (Optional premium touch) */}
                             <div className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center z-10'>
-                                <span className='text-white font-space uppercase tracking-widest text-lg flex items-center gap-2 border border-white/30 px-6 py-3 rounded-full backdrop-blur-sm'>
+                                <span className='text-primary font-space uppercase tracking-widest text-lg flex items-center gap-2 border border-white/30 px-6 py-3 rounded-full backdrop-blur-sm'>
                                     View Live <FiArrowUpRight />
                                 </span>
                             </div>
                         </div>
-
-                        {/* Right Side: Project Details (Takes 3 columns) */}
                         <div className='col-span-1 md:col-span-3 flex flex-col justify-between h-full py-4 md:py-12'>
-                            
-                            {/* Top Details */}
+
                             <div>
                                 <span className='reveal-text text-accent font-space font-bold text-xl mb-4 block'>
                                     {project.id} / 03
@@ -147,10 +134,9 @@ const Work = () => {
                                 </p>
                             </div>
 
-                            {/* Bottom Metadata (Brutalist style) */}
                             <div className='mt-auto w-full'>
-                                <div className='reveal-border h-[1px] w-full bg-gray-600 mb-6'></div>
-                                
+                                <div className='reveal-border h-px w-full bg-gray-600 mb-6'></div>
+
                                 <div className='reveal-text flex flex-col gap-4'>
                                     <div className='flex justify-between items-center text-sm font-semibold tracking-widest uppercase text-gray-400'>
                                         <span className='flex items-center gap-2'>
@@ -158,7 +144,7 @@ const Work = () => {
                                         </span>
                                         <span className='text-gray-200'>{project.role}</span>
                                     </div>
-                                    
+
                                     <div className='flex justify-between items-center text-sm font-semibold tracking-widest uppercase text-gray-400'>
                                         <span className='flex items-center gap-2'>
                                             <GoDotFill className='text-accent text-[10px]' /> Year
@@ -172,7 +158,7 @@ const Work = () => {
                     </div>
                 ))}
             </div>
-            
+
         </div>
     )
 }

@@ -70,20 +70,7 @@ export default function Cursor() {
   return (
 <div
   ref={cursor}
-  className="
-    fixed
-    top-0
-    left-0
-    w-5
-    h-5
-    bg-primary
-    mix-blend-difference
-    rounded-full
-    pointer-events-none
-    z-[9999]
-    -translate-x-1/2
-    -translate-y-1/2
-  "
+  className="fixed top-0 hidden md:block left-0 w-5 h-5 bg-primary mix-blend-difference rounded-full pointer-events-none z-999 -translate-x-1/2 -translate-y-1/2"
 />
   );
 }
